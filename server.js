@@ -32,7 +32,7 @@ const server = http.createServer(async (req, res)=>{
                 break
             }
         }
-    }catch(e){
+    }catch(err){
         console.error("SERVER ERROR:");
         console.error(err);
     }
