@@ -32,5 +32,8 @@ const server = http.createServer(async (req, res)=>{
                 break
             }
         }
+    }catch(e){
+        console.error("SERVER ERROR:");
+        console.error(err);
     }
 })
