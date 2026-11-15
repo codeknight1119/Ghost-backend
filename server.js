@@ -7,9 +7,17 @@ const PORT = process.env.PORT || 8080;
 
 const server = http.createServer(async (req, res)=>{
     try{
-          const url = new URL(req.url, `http://${req.headers.host}`);
+            const url = new URL(req.url, `http://${req.headers.host}`);
 
-        console.log(`${req.method} ${url.pathname}`);
+            console.log(`${req.method} ${url.pathname}`);
+
+             const body = await readBody(req);
+
+            if (!body || !body.user || !body.message) {
+                return sendJSON(res, {
+                    error: "Missing user or message."
+                }, 400);
+            }
 
         if (req.method === "OPTIONS") {
             res.writeHead(204, {
@@ -29,7 +37,7 @@ const server = http.createServer(async (req, res)=>{
             switch(url.pathname){
                 case("/message"):
                 console.log("Message Recived")
-                const answer = await askAI(req.body.user, req.body.message)
+                const answer = await askAI(body.user, body.message)
                             .then(answer => console.log(answer))
                             .catch(error => console.error(error));
                 return sendJSON(res, { message: answer})
