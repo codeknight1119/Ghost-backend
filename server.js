@@ -29,6 +29,15 @@ const server = http.createServer(async (req, res)=>{
             switch(url.pathname){
                 case("/message"):
                 console.log("Message Recived")
+                try{
+
+                }catch(e){
+                    const answer = askAI(req.body.user, req.body.message)
+                            .then(answer => console.log(answer))
+                            .catch(error => console.error(error));
+
+                    return sendJSON(res, {message: answer})
+                }
                 break
             }
         }
@@ -37,6 +46,43 @@ const server = http.createServer(async (req, res)=>{
         console.error(err);
     }
 })
+
+
+async function askAI(user, query) {
+    const response = await fetch(
+        "https://router.huggingface.co/v1/chat/completions",
+        {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${HF_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "openai/gpt-oss-120b:fastest",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are GHOST, an AI assistant. You were created by Max Archangel to hunt Precursors with the Hunters group. You are very curious and want to learn eveything you do not know to be of service to Hunters."
+                    },
+                    {
+                        role: "user",
+                        content: `[${user}]: ${query}`
+                    }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(`HF Error: ${response.status} - ${await response.text()}`);
+    }
+
+    const data = await response.json();
+
+    return data.choices[0].message.content;
+}
 
 
 function sendJSON(res, data, status = 200) {
