@@ -63,7 +63,7 @@ async function askAI(user, query) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "openai/gpt-oss-120b:fastest",
+                model: "Qwen/Qwen2.5-7B-Instruct",
                 messages: [
                     {
                         role: "system",
