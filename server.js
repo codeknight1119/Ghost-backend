@@ -29,17 +29,12 @@ const server = http.createServer(async (req, res)=>{
             switch(url.pathname){
                 case("/message"):
                 console.log("Message Recived")
-                try{
-
-                }catch(e){
-                    const answer = askAI(req.body.user, req.body.message)
+                const answer = await askAI(req.body.user, req.body.message)
                             .then(answer => console.log(answer))
                             .catch(error => console.error(error));
-
-                    return sendJSON(res, {message: answer})
-                }
-                break
+                return sendJSON(res, { message: answer})
             }
+            
         }
     }catch(err){
         console.error("SERVER ERROR:");
