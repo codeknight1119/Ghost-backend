@@ -5,6 +5,8 @@ const http = require("http");
 
 const PORT = process.env.PORT || 8080;
 
+const HF_TOKEN = process.env.HF_TOKEN;
+
 const server = http.createServer(async (req, res)=>{
     try{
             const url = new URL(req.url, `http://${req.headers.host}`);
